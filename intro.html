@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Intro - FLR Dynamic Sync</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/web3/1.8.0/web3.min.js"></script>
+</head>
+<body>
+    <header>
+        <h1>FLR Dynamic Sync</h1>
+        <nav>
+            <a href="/">Home</a>
+            <a href="/intro">Intro</a>
+            <a href="/connect">Connect</a>
+        </nav>
+    </header>
+    <main>
+        <section>
+            <h2>Understanding the Flare Network</h2>
+            <p>
+                Flare is redefining the future of decentralized finance with its innovative layer-1 smart contract platform. 
+                Built for scalability and EVM compatibility, Flare is purpose-built for DeFi, offering integrated liquidity and ready-made financial applications to supercharge development. 
+                With game-changing features like a trustless exchange, a decentralized stablecoin (aUSD), BNB Liquid Staking (LBNB), and its advanced EVM+ framework, Flare bridges the best of EVM networks, XRP, and the powerful Substrate ecosystem. 
+                
+                Transactions on Flare settle at lightning speed for a fraction of the gas costs compared to other networks, making it the ultimate playground for developers and DeFi innovators alike.
+            </p>
+            <img src="{{ url_for('static', filename='images/image2.png') }}" alt="Intro Banner">
+            <button id="claimNow" onclick="connectWallet()">Claim Now</button>
+            <p id="walletAddress"></p>
+        </section>
+    </main>
+    <footer>
+        <p>© 2025 FLR Dynamic Sync. All rights reserved.</p>
+    </footer>
+
+    <script>
+        async function connectWallet() {
+            if (window.ethereum) {
+                try {
+                    const accounts = await ethereum.request({ method: 'eth_requestAccounts' });
+                    document.getElementById('walletAddress').innerText = `Connected Wallet: ${accounts[0]}`;
+                } catch (error) {
+                    console.error("Wallet connection rejected");
+                }
+            } else {
+                alert("MetaMask not detected. Please install MetaMask.");
+            }
+        }
+    </script>
+</body>
+</html>

